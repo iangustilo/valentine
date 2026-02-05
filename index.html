@@ -5,95 +5,95 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <style>
-        /* Base page setup */
         body, html { 
-            margin: 0; padding: 0; height: 100%; width: 100%;
-            overflow: hidden; font-family: 'Arial', sans-serif; 
-            background-color: #000; 
+            margin: 0; padding: 0; height: 100vh; width: 100vw;
+            font-family: 'Arial', sans-serif; background-color: #000;
+            overflow: hidden;
         }
         
-        /* The Photo Collage Background - Layered to be visible */
         .background-grid {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            grid-template-rows: repeat(2, 1fr);
-            z-index: 1; /* Sits above the black background */
-            filter: brightness(0.6) blur(0.5px);
+            grid-template-columns: repeat(2, 1fr); 
+            grid-template-rows: repeat(4, 1fr);
+            z-index: 1; 
+            gap: 2px;
+            filter: brightness(0.7);
         }
+
+        @media (min-width: 768px) {
+            .background-grid {
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+            }
+        }
+
         .background-grid img { 
-            width: 100%; height: 100%; object-fit: cover; 
-            border: 1px solid rgba(255,255,255,0.1); 
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            min-height: 100%; min-width: 100%;
         }
 
-        /* The Floating Valentine Card - Top Layer */
         .overlay {
-            position: absolute; top: 50%; left: 50%; 
+            position: fixed; top: 50%; left: 50%; 
             transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.95); 
+            background: rgba(255, 255, 255, 0.98); 
             padding: 40px; border-radius: 20px;
-            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
             border: 3px solid #ff4d6d; 
-            width: 85%; max-width: 350px;
-            z-index: 10; /* Ensures it is always on top */
+            width: 80%; max-width: 320px;
+            z-index: 10;
         }
 
-        h1 { color: #ff4d6d; margin: 0 0 15px 0; font-size: 1.8rem; line-height: 1.2; }
+        h1 { color: #ff4d6d; margin: 0 0 15px 0; font-size: 1.8rem; }
         p { color: #555; font-style: italic; margin-bottom: 20px; }
-        .heart { font-size: 50px; color: #ff4d6d; animation: beat 1s infinite; margin-bottom: 5px; }
-        
-        @keyframes beat { 
-            0%, 100% { transform: scale(1); } 
-            50% { transform: scale(1.15); } 
-        }
+        .heart { font-size: 50px; color: #ff4d6d; animation: beat 1s infinite; }
+        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
         
         .buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
         .btn { 
-            background: #ff4d6d; color: white; border: none; padding: 12px; 
+            background: #ff4d6d; color: white; border: none; padding: 15px; 
             border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.1rem;
-            transition: all 0.3s ease; text-decoration: none; display: block;
+            transition: all 0.3s ease;
         }
-        .btn:hover { background: #ff758f; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,77,109,0.3); }
+        .btn:hover { background: #ff758f; transform: scale(1.05); }
+
+        #youtube-player { display: none; }
     </style>
 </head>
 <body>
 
     <div class="background-grid">
-        <img src="./1.jpeg"> <img src="./2.jpeg"> 
-        <img src="./3.jpeg"> <img src="./4.jpeg">
-        <img src="./5.jpeg"> <img src="./6.jpeg"> 
-        <img src="./7.jpeg"> <img src="./8.jpeg">
+        <img src="1.jpeg"> <img src="2.jpeg"> <img src="3.jpeg"> <img src="4.jpeg">
+        <img src="5.jpeg"> <img src="6.jpeg"> <img src="7.jpeg"> <img src="8.jpeg">
     </div>
 
     <div class="overlay">
         <div class="heart">❤️</div>
         <h1>Will you be my Valentine?</h1>
         <p>please</p>
-        
         <div class="buttons">
             <button class="btn" onclick="celebrate()">YES!</button>
             <button class="btn" onclick="celebrate()">YES NA YES!</button>
         </div>
     </div>
 
-    <audio id="loveSong" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
+    <div id="youtube-player">
+        <iframe id="video" width="1" height="1" 
+            src="https://www.youtube.com/embed/e5t1XD950Us?enablejsapi=1&start=55" 
+            frameborder="0" allow="autoplay">
+        </iframe>
+    </div>
 
     <script>
         function celebrate() {
-            // Play music on click
-            var audio = document.getElementById("loveSong");
-            audio.play();
-
-            // The Sweet Alert
-            alert("OMO! ❤️ I will be reaching out for the next steps.");
+            var iframe = document.getElementById("video");
+            var currentSrc = iframe.src;
+            iframe.src = currentSrc + "&autoplay=1";
             
-            // Updates the card text live
-            document.querySelector('h1').innerHTML = "Mission Accomplished! ❤️";
-            document.querySelector('p').innerHTML = "Check your messages soon!";
+            alert("OMO! ❤️ I will be reaching out for the next steps.");
+            document.querySelector('h1').innerHTML = "❤️";
+            document.querySelector('p').innerHTML = "❤️";
         }
     </script>
-
 </body>
 </html>
