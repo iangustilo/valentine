@@ -5,26 +5,47 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Arial', sans-serif; background-color: #000; }
+        /* Base page setup */
+        body, html { 
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            overflow: hidden; font-family: 'Arial', sans-serif; 
+            background-color: #000; 
+        }
         
-        /* The Photo Collage Background */
+        /* The Photo Collage Background - Layered to be visible */
         .background-grid {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr);
-            z-index: -1; filter: brightness(0.6) blur(1px);
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            grid-template-rows: repeat(2, 1fr);
+            z-index: 1; /* Sits above the black background */
+            filter: brightness(0.6) blur(0.5px);
         }
-        .background-grid img { width: 100%; height: 100%; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
+        .background-grid img { 
+            width: 100%; height: 100%; object-fit: cover; 
+            border: 1px solid rgba(255,255,255,0.1); 
+        }
 
-        /* The Floating Valentine Card */
+        /* The Floating Valentine Card - Top Layer */
         .overlay {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 20px;
+            position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 40px; border-radius: 20px;
             text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            border: 3px solid #ff4d6d; width: 85%; max-width: 350px;
+            border: 3px solid #ff4d6d; 
+            width: 85%; max-width: 350px;
+            z-index: 10; /* Ensures it is always on top */
         }
+
         h1 { color: #ff4d6d; margin: 0 0 15px 0; font-size: 1.8rem; line-height: 1.2; }
+        p { color: #555; font-style: italic; margin-bottom: 20px; }
         .heart { font-size: 50px; color: #ff4d6d; animation: beat 1s infinite; margin-bottom: 5px; }
-        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+        
+        @keyframes beat { 
+            0%, 100% { transform: scale(1); } 
+            50% { transform: scale(1.15); } 
+        }
         
         .buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
         .btn { 
@@ -37,12 +58,12 @@
 </head>
 <body>
 
-   <div class="background-grid">
-    <img src="./1.jpeg"> <img src="./2.jpeg"> 
-    <img src="./3.jpeg"> <img src="./4.jpeg">
-    <img src="./5.jpeg"> <img src="./6.jpeg"> 
-    <img src="./7.jpeg"> <img src="./8.jpeg">
-</div>
+    <div class="background-grid">
+        <img src="./1.jpeg"> <img src="./2.jpeg"> 
+        <img src="./3.jpeg"> <img src="./4.jpeg">
+        <img src="./5.jpeg"> <img src="./6.jpeg"> 
+        <img src="./7.jpeg"> <img src="./8.jpeg">
+    </div>
 
     <div class="overlay">
         <div class="heart">❤️</div>
@@ -55,13 +76,24 @@
         </div>
     </div>
 
+    <audio id="loveSong" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         function celebrate() {
+            // Play music on click
+            var audio = document.getElementById("loveSong");
+            audio.play();
+
+            // The Sweet Alert
             alert("OMO! ❤️ I will be reaching out for the next steps.");
+            
+            // Updates the card text live
+            document.querySelector('h1').innerHTML = "Mission Accomplished! ❤️";
+            document.querySelector('p').innerHTML = "Check your messages soon!";
         }
     </script>
 
 </body>
 </html>
-
-
