@@ -28,36 +28,25 @@
             opacity: 0; transition: opacity 2s ease; filter: brightness(0.5);
         }
 
-        /* Row Styling */
-        .carousel-row {
-            display: flex; width: 200%; /* Extra width for seamless looping */
-            height: 50vh; overflow: hidden;
-        }
+        .carousel-row { display: flex; width: 200%; height: 50vh; overflow: hidden; }
+        .track { display: flex; width: fit-content; }
+        .track img { height: 50vh; aspect-ratio: 1/1; object-fit: cover; display: block; }
 
-        .track {
-            display: flex;
-            width: fit-content;
-        }
-
-        .track img {
-            height: 50vh;
-            aspect-ratio: 1/1; /* Keeps them perfectly square */
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Animations for spinning/sliding */
         .track-top { animation: slideRight 30s linear infinite; }
         .track-bottom { animation: slideLeft 30s linear infinite; }
 
-        @keyframes slideRight {
-            0% { transform: translateX(-50%); }
-            100% { transform: translateX(0%); }
+        @keyframes slideRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0%); } }
+        @keyframes slideLeft { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
+
+        /* Falling Hearts Styling */
+        .heart-fall {
+            position: fixed; top: -10%; z-index: 5;
+            user-select: none; pointer-events: none;
+            animation: fall linear forwards;
         }
 
-        @keyframes slideLeft {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
         }
 
         /* The Invite Card */
@@ -71,7 +60,7 @@
 
         h1 { color: #ff4d6d; margin: 10px 0; font-size: 1.6rem; }
         p { color: #555; font-style: italic; margin-bottom: 20px; }
-        .heart { font-size: 50px; color: #ff4d6d; animation: beat 1s infinite; }
+        .card-heart { font-size: 50px; color: #ff4d6d; animation: beat 1s infinite; }
 
         .buttons { display: flex; flex-direction: column; gap: 12px; }
         .btn { 
@@ -95,17 +84,19 @@
         <div class="carousel-row">
             <div class="track track-top">
                 <img src="1.jpeg"><img src="2.jpeg"><img src="3.jpeg"><img src="4.jpeg">
-                <img src="1.jpeg"><img src="2.jpeg"><img src="3.jpeg"><img src="4.jpeg"> </div>
+                <img src="1.jpeg"><img src="2.jpeg"><img src="3.jpeg"><img src="4.jpeg">
+            </div>
         </div>
         <div class="carousel-row">
             <div class="track track-bottom">
                 <img src="5.jpeg"><img src="6.jpeg"><img src="7.jpeg"><img src="8.jpeg">
-                <img src="5.jpeg"><img src="6.jpeg"><img src="7.jpeg"><img src="8.jpeg"> </div>
+                <img src="5.jpeg"><img src="6.jpeg"><img src="7.jpeg"><img src="8.jpeg">
+            </div>
         </div>
     </div>
 
     <div class="overlay" id="main-card">
-        <div class="heart">❤️</div>
+        <div class="card-heart">❤️</div>
         <h1 id="headline">Will you be my Valentine?</h1>
         <p id="subtext">please</p>
         <div class="buttons">
@@ -121,6 +112,18 @@
     <script>
         var audio = document.getElementById("loveSong");
 
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-fall');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's'; // 2-5 seconds
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            document.body.appendChild(heart);
+
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+
         function openCard() {
             document.getElementById('reveal-screen').style.opacity = '0';
             setTimeout(() => { document.getElementById('reveal-screen').style.display = 'none'; }, 1000);
@@ -129,6 +132,9 @@
             document.getElementById('bg-grid').style.opacity = '1';
             document.getElementById('main-card').style.opacity = '1';
             document.getElementById('main-card').style.pointerEvents = 'auto';
+
+            // Start the heart rain
+            setInterval(createHeart, 300);
         }
 
         function celebrate(event) {
@@ -137,11 +143,14 @@
             audio.play();
             
             document.getElementById('headline').innerHTML = "Mission Accomplished! ❤️";
-            document.getElementById('subtext').innerHTML = "Check your messages soon!";
+            document.getElementById('subtext').innerHTML = "Biryani time";
             document.querySelector('.buttons').style.display = 'none';
             
+            // Make the heart rain even more intense!
+            setInterval(createHeart, 100);
+
             setTimeout(() => {
-                alert("OMO! ❤️ I will be reaching out for the next steps.");
+                alert("OMO! ❤️ I will be reaching out pagkauwi mo.");
             }, 100);
         }
     </script>
