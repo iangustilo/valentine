@@ -10,69 +10,84 @@
             font-family: 'Arial', sans-serif; background-color: #000;
             overflow: hidden;
         }
-        
-        /* The Photo Grid */
+
+        /* Initial "Click to Open" Screen */
+        #reveal-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 100; transition: opacity 1s ease;
+        }
+
+        .envelope {
+            font-size: 80px; cursor: pointer; animation: float 2s infinite ease-in-out;
+            filter: drop-shadow(0 0 15px #ff4d6d);
+        }
+
+        .click-text {
+            color: white; margin-top: 20px; font-size: 1.2rem;
+            letter-spacing: 2px; animation: pulse 1.5s infinite;
+        }
+
+        /* Background Grid */
         .background-grid {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            grid-template-rows: repeat(4, 1fr);
-            z-index: 1; 
-            gap: 2px;
-            filter: brightness(0.7);
+            display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 1fr);
+            z-index: 1; gap: 4px; filter: brightness(0.6); opacity: 0; transition: opacity 2s ease;
         }
 
         @media (min-width: 768px) {
-            .background-grid {
-                grid-template-columns: repeat(4, 1fr);
-                grid-template-rows: repeat(2, 1fr);
-            }
+            .background-grid { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); }
         }
 
-        .background-grid img { 
-            width: 100%; height: 100%; object-fit: cover; display: block;
-        }
+        .background-grid img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
         /* The Invite Card */
         .overlay {
-            position: fixed; top: 50%; left: 50%; 
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.98); 
-            padding: 40px; border-radius: 20px;
-            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-            border: 3px solid #ff4d6d; 
-            width: 80%; max-width: 320px;
-            z-index: 10;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px;
+            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            border: 3px solid #ff4d6d; width: 85%; max-width: 320px;
+            z-index: 10; opacity: 0; transition: opacity 2s ease; pointer-events: none;
         }
 
-        h1 { color: #ff4d6d; margin: 0 0 15px 0; font-size: 1.8rem; }
+        h1 { color: #ff4d6d; margin: 10px 0; font-size: 1.6rem; }
         p { color: #555; font-style: italic; margin-bottom: 20px; }
         .heart { font-size: 50px; color: #ff4d6d; animation: beat 1s infinite; }
-        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
-        
-        .buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+
+        .buttons { display: flex; flex-direction: column; gap: 12px; }
         .btn { 
             background: #ff4d6d; color: white; border: none; padding: 15px; 
             border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.1rem;
-            transition: all 0.3s ease;
+            transition: 0.3s;
         }
         .btn:hover { background: #ff758f; transform: scale(1.05); }
+
+        /* Animations */
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
     </style>
 </head>
 <body>
 
-    <div class="background-grid">
+    <div id="reveal-screen" onclick="openCard()">
+        <div class="envelope">✉️</div>
+        <div class="click-text">CLICK TO OPEN</div>
+    </div>
+
+    <div class="background-grid" id="bg-grid">
         <img src="1.jpeg"> <img src="2.jpeg"> <img src="3.jpeg"> <img src="4.jpeg">
         <img src="5.jpeg"> <img src="6.jpeg"> <img src="7.jpeg"> <img src="8.jpeg">
     </div>
 
-    <div class="overlay">
+    <div class="overlay" id="main-card">
         <div class="heart">❤️</div>
-        <h1>Will you be my Valentine?</h1>
-        <p>please</p>
+        <h1 id="headline">Will you be my Valentine?</h1>
+        <p id="subtext">please</p>
         <div class="buttons">
-            <button class="btn" onclick="celebrate()">YES!</button>
-            <button class="btn" onclick="celebrate()">YES NA YES!</button>
+            <button class="btn" onclick="celebrate(event)">YES!</button>
+            <button class="btn" onclick="celebrate(event)">YES NA YES!</button>
         </div>
     </div>
 
@@ -81,17 +96,36 @@
     </audio>
 
     <script>
-        function celebrate() {
-            var audio = document.getElementById("loveSong");
+        var audio = document.getElementById("loveSong");
+
+        function openCard() {
+            // Hide reveal screen
+            document.getElementById('reveal-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('reveal-screen').style.display = 'none';
+            }, 1000);
+
+            // Start music at 0:00
+            audio.play();
+
+            // Show Grid and Card
+            document.getElementById('bg-grid').style.opacity = '1';
+            document.getElementById('main-card').style.opacity = '1';
+            document.getElementById('main-card').style.pointerEvents = 'auto';
+        }
+
+        function celebrate(event) {
+            event.stopPropagation(); 
             
-            // Set starting point to 55 seconds
-            audio.currentTime = 55; 
+            // Skip to the chorus
+            audio.currentTime = 55;
             audio.play();
             
-            alert("OMO! ❤️ I will be reaching out for the next steps.");
+            document.getElementById('headline').innerHTML = "Mission Accomplished! ❤️";
+            document.getElementById('subtext').innerHTML = "Check your messages soon!";
+            document.querySelector('.buttons').style.display = 'none';
             
-            document.querySelector('h1').innerHTML = "Mission Accomplished! ❤️";
-            document.querySelector('p').innerHTML = "If you have allergies or food preference let me know. Mapa-Biryani tayo niyan";
+            alert("OMO! ❤️ I will be reaching out for the next steps.");
         }
     </script>
 </body>
